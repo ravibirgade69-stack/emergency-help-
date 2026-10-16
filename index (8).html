@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0F172A">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Emergency Help">
+    <title>Emergency Help - Family Safety System</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandDarkBlue: '#0F172A',
+                        brandRed: '#DC2626',
+                        brandRedDark: '#991B1B',
+                        brandBlue: '#1E3A8A',
+                        brandGreen: '#15803D',
+                        brandGreenDark: '#166534'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Embedded PWA Web Manifest with official red phone icon -->
+    <script>
+        (function() {
+            const svgIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512"><rect width="512" height="512" rx="100" fill="#DC2626"/><rect x="206" y="80" width="100" height="352" rx="20" fill="white"/><rect x="80" y="206" width="352" height="100" rx="20" fill="white"/><path d="M180 160 C200 130, 240 140, 260 170 L275 195 C285 210, 275 230, 260 240 L245 250 C240 255, 240 265, 250 275 L275 300 C285 310, 295 310, 300 305 L310 290 C320 275, 340 265, 355 275 L380 290 C410 310, 420 350, 390 370 C350 410, 260 380, 200 320 C140 260, 110 170, 150 130 Z" fill="#991B1B" stroke="#ffffff" stroke-width="8"/><circle cx="340" cy="180" r="16" fill="white"/><circle cx="370" cy="150" r="14" fill="white"/><circle cx="400" cy="120" r="12" fill="white"/></svg>`;
+            const iconUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgIcon);
+
+            const appleIcon = document.createElement('link');
+            appleIcon.rel = 'apple-touch-icon';
+            appleIcon.href = iconUrl;
+            document.head.appendChild(appleIcon);
+
+            const favicon = document.createElement('link');
+            favicon.rel = 'icon';
+            favicon.type = 'image/svg+xml';
+            favicon.href = iconUrl;
+            document.head.appendChild(favicon);
+
+            const manifest = {
+                name: "Emergency Help - Family Safety System",
+                short_name: "Emergency",
+                description: "Family safety, rapid National SOS (112), instant family alert via SMS/WhatsApp with live GPS, emergency helplines, sirens, and AI first-aid assistance.",
+                start_url: "./",
+                display: "standalone",
+                orientation: "portrait",
+                background_color: "#0F172A",
+                theme_color: "#0F172A",
+                icons: [
+                    { src: iconUrl, sizes: "192x192 512x512", type: "image/svg+xml", purpose: "any maskable" }
+                ]
+            };
+
+            const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = URL.createObjectURL(blob);
+            document.head.appendChild(manifestLink);
+        })();
+    </script>
+
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #0F172A;
+            color: #F8FAFC;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 16px rgba(220, 38, 38, 0); }
+            100% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+        }
+        @keyframes pulse-family {
+            0% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.6); }
+            70% { transform: scale(1.02); box-shadow: 0 0 0 14px rgba(217, 119, 6, 0); }
+            100% { transform: scale(0.98); box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+        }
+        @keyframes strobe-flash {
+            0%, 49% { background-color: #ffffff; }
+            50%, 100% { background-color: #dc2626; }
+        }
+        .sos-btn-pulse { animation: pulse-ring 2s infinite ease-in-out; }
+        .family-btn-pulse { animation: pulse-family 2s infinite ease-in-out; }
+        .screen-strobe { animation: strobe-flash 0.15s infinite; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.4); border-radius: 9999px; }
+    </style>
+<script src="/_aistudio-iframe.js?v=6634132a"></script></head>
+<body class="min-h-screen flex flex-col justify-between max-w-md mx-auto relative bg-slate-950 shadow-2xl border-x border-slate-900">
+
+    <!-- Top Sticky Header -->
+    <header class="bg-slate-900 text-white p-3.5 border-b-2 border-red-600 sticky top-0 z-30 shadow-xl flex items-center justify-between">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-10 h-10 rounded-2xl bg-white flex items-center justify-center p-1 border-2 border-red-500 shadow-lg">
+                <!-- Red Emergency Phone Handset Icon -->
+                <svg viewBox="0 0 100 100" class="w-full h-full" fill="none">
+                    <rect width="100" height="100" rx="20" fill="#dc2626"/>
+                    <rect x="42" y="16" width="16" height="68" rx="4" fill="white"/>
+                    <rect x="16" y="42" width="68" height="16" rx="4" fill="white"/>
+                    <path d="M35 30 C40 22 50 24 55 32 L58 38 C60 42 58 47 54 49 L50 51 C48 52 48 55 51 58 L58 65 C61 68 64 68 65 66 L67 62 C69 58 74 56 78 58 L84 61 C92 66 94 76 86 82 C76 92 54 84 40 70 C26 56 18 34 28 24 Z" fill="#991b1b" stroke="#ffffff" stroke-width="2"/>
+                </svg>
+            </div>
+            <div>
+                <h1 id="appTitle" class="text-base font-black tracking-tight text-white leading-tight">
+                    Emergency Help
+                </h1>
+                <p id="appSubtitle" class="text-[10px] text-red-400 font-medium">
+                    Family Safety & Rapid Alert
+                </p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-1.5">
+            <!-- Language Switcher -->
+            <button onclick="toggleLanguage()" class="bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-700 hover:to-amber-700 text-white font-extrabold px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow active:scale-95 transition-all">
+                🌐 <span id="langBtnText">हिन्दी</span>
+            </button>
+            <!-- Siren Quick Toggle -->
+            <button onclick="openModal('sirenModal')" class="p-2 bg-slate-800 text-red-400 border border-slate-700 rounded-xl hover:border-red-500" title="Siren">
+                🔊
+            </button>
+            <!-- Medical ID -->
+            <button onclick="openModal('medicalModal')" class="p-2 text-emerald-400 hover:bg-slate-800 rounded-xl" title="Medical ID">
+                🪪
+            </button>
+            <!-- History -->
+            <button onclick="openModal('historyModal')" class="p-2 text-amber-400 hover:bg-slate-800 rounded-xl" title="History">
+                🕒
+            </button>
+            <!-- Info / APK Guide -->
+            <button onclick="openModal('infoModal')" class="p-2 text-blue-400 hover:bg-slate-800 rounded-xl" title="Info">
+                ℹ️
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Scrollable Area -->
+    <main class="p-4 flex-1 space-y-3.5 pb-24">
+
+        <!-- Live GPS Banner -->
+        <div onclick="openModal('locationModal')" class="bg-slate-900 border border-slate-800 hover:border-yellow-500/50 p-2.5 rounded-2xl flex items-center justify-between cursor-pointer transition-colors shadow-sm">
+            <div class="flex items-center gap-2">
+                <div class="w-7 h-7 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-400 text-sm animate-pulse">
+                    📍
+                </div>
+                <div>
+                    <span id="gpsTextMain" class="text-[11px] font-bold text-slate-200 block leading-tight">
+                        GPS प्राप्त किया जा रहा है...
+                    </span>
+                    <span id="gpsSubMain" class="text-[9px] text-slate-400">
+                        लाइव उपग्रह निर्देशांक देखने के लिए टैप करें
+                    </span>
+                </div>
+            </div>
+            <span class="text-[10px] bg-yellow-500/20 text-yellow-300 font-bold px-2 py-0.5 rounded-full border border-yellow-500/30">
+                GPS Active
+            </span>
+        </div>
+
+        <!-- 1. National SOS Emergency Button (112 Call) -->
+        <div class="text-center">
+            <button onclick="openModal('nationalSosModal')" class="sos-btn-pulse w-full bg-gradient-to-b from-red-600 to-red-800 text-white py-4 px-4 rounded-3xl shadow-2xl border-4 border-white active:scale-95 transition-transform flex flex-col items-center justify-center space-y-1">
+                <span class="text-4xl animate-bounce">🚨</span>
+                <span id="nationalSosBtnText" class="text-2xl font-black tracking-wider leading-tight">
+                    NATIONAL SOS (112)
+                </span>
+                <span id="nationalSosBtnSub" class="text-xs bg-black/40 px-3 py-1 rounded-full text-red-100 font-semibold border border-white/20">
+                    तत्काल पुलिस / एम्बुलेंस / दमकल सेवा
+                </span>
+            </button>
+        </div>
+
+        <!-- 1B. Emergency SOS + Audio Recording Button -->
+        <div class="text-center">
+            <button onclick="openModal('recordSosModal')" class="w-full bg-gradient-to-r from-rose-700 via-red-600 to-rose-800 hover:from-rose-600 hover:to-rose-700 text-white py-3.5 px-4 rounded-3xl shadow-xl border-4 border-rose-300 active:scale-95 transition-transform flex flex-col items-center justify-center space-y-1">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl">🎙️</span>
+                    <span class="text-lg font-black tracking-wide leading-tight">
+                        🚨 आपातकालीन SOS + ऑडियो रिकॉर्डिंग
+                    </span>
+                </div>
+                <span class="text-xs bg-black/40 px-3 py-0.5 rounded-full text-rose-100 font-semibold border border-rose-200/20">
+                    लाइव ऑडियो साक्ष्य रिकॉर्ड करें और परिवार को GPS भेजें
+                </span>
+            </button>
+        </div>
+
+        <!-- 2. Family SOS Trigger Button -->
+        <div class="text-center">
+            <button onclick="openFamilySos()" class="family-btn-pulse w-full bg-gradient-to-b from-amber-500 to-amber-700 text-white py-3.5 px-4 rounded-3xl shadow-xl border-4 border-amber-200 active:scale-95 transition-transform flex flex-col items-center justify-center space-y-1">
+                <span class="text-3xl">🆘</span>
+                <span id="familySosBtnText" class="text-xl font-black tracking-wide leading-tight">
+                    परिवार को आपातकालीन अलर्ट भेजें
+                </span>
+                <span id="familySosBtnSub" class="text-xs bg-black/40 px-3 py-0.5 rounded-full text-amber-100 font-semibold border border-amber-200/20">
+                    लाइव लोकेशन WhatsApp और SMS से भेजें
+                </span>
+            </button>
+        </div>
+
+        <!-- 3. Safe Status Button ("I AM SAFE") -->
+        <div>
+            <button onclick="openModal('safeModal')" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-800 text-white font-black py-3 px-4 rounded-2xl shadow-lg border-2 border-emerald-400 flex items-center justify-center gap-2 text-base active:scale-98 transition-all">
+                <span class="text-xl">💚</span>
+                <span id="safeBtnText">मैं सुरक्षित हूँ (I AM SAFE)</span>
+            </button>
+        </div>
+
+        <!-- Quick Utility Strip: Siren, Offline Guides, Medical ID -->
+        <div class="grid grid-cols-3 gap-2 pt-0.5">
+            <button onclick="openModal('sirenModal')" class="bg-slate-900 border border-red-500/40 p-2.5 rounded-2xl flex flex-col items-center justify-center text-center shadow active:scale-95 transition-all">
+                <div class="w-8 h-8 rounded-full bg-red-600/20 flex items-center justify-center text-red-400 mb-1">
+                    🔊
+                </div>
+                <span id="stripSirenTitle" class="text-[11px] font-black text-white">सायरन स्ट्रोब</span>
+                <span class="text-[9px] text-red-400 mt-0.5">SOS Alarm</span>
+            </button>
+
+            <button onclick="openModal('firstAidModal')" class="bg-slate-900 border border-emerald-500/40 p-2.5 rounded-2xl flex flex-col items-center justify-center text-center shadow active:scale-95 transition-all">
+                <div class="w-8 h-8 rounded-full bg-emerald-600/20 flex items-center justify-center text-emerald-400 mb-1">
+                    🩹
+                </div>
+                <span id="stripAidTitle" class="text-[11px] font-black text-white">प्राथमिक चिकित्सा</span>
+                <span class="text-[9px] text-emerald-400 mt-0.5">Offline Cards</span>
+            </button>
+
+            <button onclick="openModal('medicalModal')" class="bg-slate-900 border border-blue-500/40 p-2.5 rounded-2xl flex flex-col items-center justify-center text-center shadow active:scale-95 transition-all">
+                <div class="w-8 h-8 rounded-full bg-blue-600/20 flex items-center justify-center text-blue-400 mb-1">
+                    🪪
+                </div>
+                <span id="stripMedTitle" class="text-[11px] font-black text-white">मेडिकल आईडी</span>
+                <span class="text-[9px] text-blue-400 mt-0.5">Blood & Allergy</span>
+            </button>
+        </div>
+
+        <!-- Helplines & Tools Grid -->
+        <div class="grid grid-cols-2 gap-2.5">
+            <!-- 1. Emergency Numbers -->
+            <button onclick="openHelplineCategory('all')" class="bg-slate-900 p-3 rounded-2xl border-2 border-slate-800 hover:border-red-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-red-600/20 rounded-2xl flex items-center justify-center text-red-500 text-lg mb-1 border border-red-500/30">
+                    🚑
+                </div>
+                <span id="gridNumTitle" class="text-xs font-black text-white">आपातकालीन नंबर</span>
+                <span id="gridNumSub" class="text-[10px] text-slate-400 mt-0.5">पुलिस, एम्बुलेंस, दमकल</span>
+            </button>
+
+            <!-- 2. Cyber Crime -->
+            <button onclick="openHelplineCategory('cyber')" class="bg-slate-900 p-3 rounded-2xl border-2 border-sky-900/60 hover:border-sky-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-sky-600/20 rounded-2xl flex items-center justify-center text-sky-400 text-lg mb-1 border border-sky-500/30">
+                    💻
+                </div>
+                <span id="gridCyberTitle" class="text-xs font-black text-white">साइबर अपराध</span>
+                <span id="gridCyberSub" class="text-[10px] text-sky-400 font-bold mt-0.5">हेल्पलाइन 1930</span>
+            </button>
+
+            <!-- 3. Hospitals & Blood -->
+            <button onclick="openHelplineCategory('medical')" class="bg-slate-900 p-3 rounded-2xl border-2 border-emerald-900/60 hover:border-emerald-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-emerald-600/20 rounded-2xl flex items-center justify-center text-emerald-400 text-lg mb-1 border border-emerald-500/30">
+                    🏥
+                </div>
+                <span id="gridHospTitle" class="text-xs font-black text-white">अस्पताल व ब्लड बैंक</span>
+                <span id="gridHospSub" class="text-[10px] text-slate-400 mt-0.5">निकटतम अस्पताल खोजें</span>
+            </button>
+
+            <!-- 4. CM Helpline -->
+            <button onclick="openHelplineCategory('cyber')" class="bg-slate-900 p-3 rounded-2xl border-2 border-orange-900/60 hover:border-orange-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-orange-600/20 rounded-2xl flex items-center justify-center text-orange-400 text-lg mb-1 border border-orange-500/30">
+                    🏛️
+                </div>
+                <span id="gridCmTitle" class="text-xs font-black text-white">सीएम हेल्पलाइन</span>
+                <span id="gridCmSub" class="text-[10px] text-orange-400 font-bold mt-0.5">नागरिक निवारण 181</span>
+            </button>
+
+            <!-- 5. AI Assistant -->
+            <button onclick="openModal('aiModal')" class="bg-slate-900 p-3 rounded-2xl border-2 border-purple-500/60 hover:border-purple-400 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all relative overflow-hidden">
+                <span class="absolute top-1 right-1 bg-purple-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full">AI 24x7</span>
+                <div class="w-10 h-10 bg-purple-600/20 rounded-2xl flex items-center justify-center text-purple-400 text-lg mb-1 border border-purple-500/40">
+                    🤖
+                </div>
+                <span id="gridAiTitle" class="text-xs font-black text-white">एआई सहायक</span>
+                <span id="gridAiSub" class="text-[10px] text-purple-400 font-semibold mt-0.5">प्राथमिक उपचार निर्देश</span>
+            </button>
+
+            <!-- 6. Legal Aid -->
+            <button onclick="openHelplineCategory('all')" class="bg-slate-900 p-3 rounded-2xl border-2 border-blue-900/60 hover:border-blue-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-400 text-lg mb-1 border border-blue-500/30">
+                    ⚖️
+                </div>
+                <span id="gridLegalTitle" class="text-xs font-black text-white">कानूनी सहायता</span>
+                <span id="gridLegalSub" class="text-[10px] text-slate-400 mt-0.5">मुफ्त NALSA (15100)</span>
+            </button>
+
+            <!-- 7. Highway Accident -->
+            <button onclick="openHelplineCategory('road')" class="bg-slate-900 p-3 rounded-2xl border-2 border-rose-900/60 hover:border-rose-500 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-rose-600/20 rounded-2xl flex items-center justify-center text-rose-400 text-lg mb-1 border border-rose-500/30">
+                    🛣️
+                </div>
+                <span id="gridHighTitle" class="text-xs font-black text-white">हाईवे दुर्घटना</span>
+                <span id="gridHighSub" class="text-[10px] text-rose-400 font-bold mt-0.5">NHAI हेल्पलाइन 1033</span>
+            </button>
+
+            <!-- 8. My Location -->
+            <button onclick="openModal('locationModal')" class="bg-slate-900 p-3 rounded-2xl border-2 border-yellow-500/60 hover:border-yellow-400 shadow-md flex flex-col items-center justify-center text-center active:bg-slate-800 transition-all">
+                <div class="w-10 h-10 bg-yellow-500/20 rounded-2xl flex items-center justify-center text-yellow-400 text-lg mb-1 border border-yellow-500/30">
+                    📍
+                </div>
+                <span id="gridLocTitle" class="text-xs font-black text-white">मेरी लोकेशन</span>
+                <span id="gridLocSub" class="text-[10px] text-slate-400 mt-0.5">जीपीएस निर्देशांक व मैप</span>
+            </button>
+        </div>
+
+        <!-- Saved Family Contacts Card -->
+        <div class="bg-slate-900 p-3.5 rounded-3xl border-2 border-amber-500/50 shadow-md space-y-3">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <div>
+                    <h2 id="contactsHeader" class="text-xs sm:text-sm font-extrabold text-amber-400 flex items-center gap-1.5">
+                        👨‍👩‍👧‍👦 पारिवारिक आपातकालीन संपर्क
+                    </h2>
+                    <p id="contactsSub" class="text-[10px] text-slate-400">
+                        त्वरित संकट अलर्ट भेजने हेतु सहेजे गए नंबर
+                    </p>
+                </div>
+                <button onclick="openModal('addContactModal')" class="bg-amber-600 hover:bg-amber-500 text-white text-[11px] font-bold px-2.5 py-1.5 rounded-xl shadow active:scale-95 transition-all">
+                    ➕ नया जोड़ें
+                </button>
+            </div>
+
+            <div id="contactsListContainer" class="space-y-2">
+                <!-- Dynamically rendered contacts -->
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Action Navigation -->
+    <footer class="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-slate-900/95 backdrop-blur-md border-t border-slate-800 p-2.5 flex items-center justify-between z-20 px-5 shadow-2xl">
+        <button onclick="openModal('nationalSosModal')" class="flex flex-col items-center text-red-500 font-extrabold text-[10px] active:scale-95">
+            <span class="text-xl">🚨</span>
+            <span>112 SOS</span>
+        </button>
+        <button onclick="openFamilySos()" class="flex flex-col items-center text-amber-400 font-bold text-[10px] active:scale-95">
+            <span class="text-xl">🆘</span>
+            <span>Family SOS</span>
+        </button>
+        <button onclick="openModal('aiModal')" class="flex flex-col items-center text-purple-400 font-bold text-[10px] active:scale-95">
+            <span class="text-xl">🤖</span>
+            <span>AI Triage</span>
+        </button>
+        <button onclick="openModal('firstAidModal')" class="flex flex-col items-center text-emerald-400 font-bold text-[10px] active:scale-95">
+            <span class="text-xl">🩹</span>
+            <span>First Aid</span>
+        </button>
+        <button onclick="openModal('locationModal')" class="flex flex-col items-center text-yellow-400 font-bold text-[10px] active:scale-95">
+            <span class="text-xl">📍</span>
+            <span>Location</span>
+        </button>
+    </footer>
+
+    <!-- MODALS CONTAINER -->
+
+    <!-- 1. NATIONAL SOS MODAL (112) -->
+    <div id="nationalSosModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-4 border-red-600 rounded-3xl p-5 max-w-sm w-full text-center shadow-2xl relative space-y-4 text-white">
+            <div class="w-16 h-16 bg-red-600/20 border-2 border-red-500 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce">
+                🚨
+            </div>
+            <div>
+                <h3 class="text-xl font-black text-red-500 uppercase tracking-wide">
+                    राष्ट्रीय आपातकाल SOS (112)
+                </h3>
+                <p class="text-xs text-slate-300 mt-1">
+                    क्या आप गंभीर खतरे में हैं? पुलिस, चिकित्सा या दमकल के लिए 112 तुरंत कनेक्ट होगा।
+                </p>
+            </div>
+            <div class="bg-red-950/60 border border-red-800 rounded-2xl p-2.5 flex items-center justify-between">
+                <span class="text-xs text-red-300 font-bold">त्वरित पुष्टि:</span>
+                <span id="countdownText" class="text-base font-black text-white bg-red-600 px-2.5 py-0.5 rounded-full">3s</span>
+            </div>
+            <a id="sosCallLink" href="tel:112" onclick="logHistory('Dialed 112 National SOS', 'Call'); closeModal('nationalSosModal');" class="w-full bg-red-600 hover:bg-red-500 text-white font-black text-lg py-3 rounded-2xl flex items-center justify-center gap-2 shadow-xl active:scale-95 transition-all">
+                📞 अभी 112 पर कॉल करें
+            </a>
+            <button onclick="sendEmergencySMS()" class="w-full bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/50 font-bold py-2.5 rounded-xl text-xs">
+                💬 परिवार को लोकेशन SMS भेजें
+            </button>
+            <button onclick="closeModal('nationalSosModal')" class="w-full bg-slate-800 text-slate-400 font-bold py-2 rounded-xl text-xs">
+                रद्द करें (Cancel)
+            </button>
+        </div>
+    </div>
+
+    <!-- 2. FAMILY EMERGENCY SOS MODAL -->
+    <div id="familySosModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-4 border-amber-500 rounded-3xl p-5 max-w-sm w-full shadow-2xl relative space-y-4 text-white">
+            <div class="text-center space-y-1">
+                <div class="w-16 h-16 bg-amber-500/20 border-2 border-amber-500 rounded-full flex items-center justify-center mx-auto text-3xl animate-bounce">
+                    🆘
+                </div>
+                <h3 class="text-xl font-black text-amber-400">परिवार को आपातकालीन संदेश</h3>
+                <p class="text-xs text-slate-300">आपकी लाइव जीपीएस स्थिति के साथ संदेश तैयार है।</p>
+            </div>
+            <div id="familyGpsDisplay" class="p-2.5 bg-amber-950/40 border border-amber-500/40 rounded-xl text-xs text-amber-300 font-mono text-center">
+                📍 GPS प्राप्त किया जा रहा है...
+            </div>
+            <div class="space-y-2">
+                <button onclick="dispatchFamilyWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow">
+                    💬 WhatsApp द्वारा भेजें
+                </button>
+                <button onclick="dispatchFamilySMS()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-xl flex items-center justify-center gap-2 text-sm shadow">
+                    📱 SMS द्वारा सभी को भेजें
+                </button>
+                <button onclick="copyDistressMessage()" class="w-full bg-slate-800 text-amber-300 border border-amber-500/40 font-bold py-2 rounded-xl text-xs">
+                    📋 संकट संदेश कॉपी करें
+                </button>
+                <button onclick="toggleSirenAudio()" class="w-full bg-slate-800 text-red-400 border border-red-500/40 font-bold py-2 rounded-xl text-xs">
+                    🔊 तेज़ सायरन बजाएं/रोकें
+                </button>
+            </div>
+            <button onclick="closeModal('familySosModal')" class="w-full bg-slate-800 text-slate-400 font-bold py-2 rounded-xl text-xs">
+                बंद करें
+            </button>
+        </div>
+    </div>
+
+    <!-- 3. SAFE STATUS MODAL -->
+    <div id="safeModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-4 border-emerald-500 rounded-3xl p-5 max-w-sm w-full shadow-2xl relative space-y-4 text-white text-center">
+            <div class="w-16 h-16 bg-emerald-500/20 border-2 border-emerald-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+                💚
+            </div>
+            <h3 class="text-xl font-black text-emerald-400">"मैं सुरक्षित हूँ" संदेश भेजें</h3>
+            <p class="text-xs text-slate-300">परिवार को आश्वस्त करें कि आप खतरे से बाहर और सुरक्षित हैं।</p>
+            <input type="text" id="safeCustomNote" placeholder="वैकल्पिक नोट (उदा. मैं घर पहुंच गया हूँ)..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+            <div class="space-y-2">
+                <button onclick="sendSafeNotification('whatsapp')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2.5 rounded-xl text-xs shadow">
+                    WhatsApp से सूचित करें
+                </button>
+                <button onclick="sendSafeNotification('sms')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-2.5 rounded-xl text-xs shadow">
+                    SMS से सूचित करें
+                </button>
+            </div>
+            <button onclick="closeModal('safeModal')" class="w-full bg-slate-800 text-slate-400 font-bold py-2 rounded-xl text-xs">
+                रद्द करें
+            </button>
+        </div>
+    </div>
+
+    <!-- 4. SIREN & STROBE MODAL -->
+    <div id="sirenModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-red-500 rounded-3xl p-4 sm:p-5 max-w-sm w-full text-center shadow-2xl relative space-y-3.5 text-white max-h-[92vh] overflow-y-auto">
+            <div class="w-14 h-14 bg-red-600/20 border-2 border-red-500 rounded-2xl flex items-center justify-center mx-auto text-2xl">
+                🚨
+            </div>
+            <h3 class="text-lg font-black text-white">आपातकालीन सायरन और स्ट्रोब</h3>
+            <p class="text-xs text-slate-300">हमलावरों को भगाने और ध्यान आकर्षित करने के लिए तेज़ आवाज़ उत्पन्न करें।</p>
+
+            <!-- Scheduled Safety Siren (Dead Man's Switch) Section -->
+            <div class="bg-gradient-to-b from-amber-950/60 to-slate-900 border-2 border-amber-500/70 rounded-2xl p-3 text-left space-y-2 shadow-md">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs font-black text-amber-400 flex items-center gap-1.5">
+                        ⏱️ निर्धारित सुरक्षा सायरन (Incapacitation Timer)
+                    </span>
+                    <span id="standaloneTimerBadge" class="hidden text-[9px] bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded-full animate-pulse">
+                        Active
+                    </span>
+                </div>
+                <p class="text-[10px] text-slate-300">
+                    यदि आप बेहोश/असमर्थ हो जाएं या समय पर रद्द न कर सकें, तो सायरन अपने आप बज उठेगा।
+                </p>
+
+                <!-- Active Timer Display -->
+                <div id="standaloneActiveTimerBox" class="hidden bg-slate-900 border border-amber-500/50 rounded-xl p-2.5 text-center space-y-2">
+                    <div id="standaloneTimerCountdown" class="text-3xl font-black font-mono text-amber-300 tracking-wider animate-pulse">
+                        03:00
+                    </div>
+                    <div class="flex gap-1.5">
+                        <button onclick="extendScheduledTimer(60)" class="flex-1 bg-slate-800 text-amber-300 border border-amber-500/40 text-[10px] font-bold py-1.5 rounded-lg">
+                            +1 मिनट
+                        </button>
+                        <button onclick="extendScheduledTimer(300)" class="flex-1 bg-slate-800 text-amber-300 border border-amber-500/40 text-[10px] font-bold py-1.5 rounded-lg">
+                            +5 मिनट
+                        </button>
+                    </div>
+                    <button onclick="disarmScheduledTimer()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1 shadow">
+                        💚 मैं सुरक्षित हूँ — टाइमर बंद करें
+                    </button>
+                </div>
+
+                <!-- Timer Presets & Setup -->
+                <div id="standaloneTimerSetupBox" class="space-y-2">
+                    <div class="grid grid-cols-5 gap-1 text-[10px] font-bold text-center">
+                        <button onclick="setTimerDuration(30, this)" class="timer-btn py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">30s</button>
+                        <button onclick="setTimerDuration(60, this)" class="timer-btn py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">1m</button>
+                        <button onclick="setTimerDuration(180, this)" class="timer-btn py-1.5 rounded-lg bg-amber-500 text-slate-950 font-black border border-amber-400">3m</button>
+                        <button onclick="setTimerDuration(300, this)" class="timer-btn py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">5m</button>
+                        <button onclick="setTimerDuration(600, this)" class="timer-btn py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">10m</button>
+                    </div>
+                    <button onclick="startScheduledTimer()" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-black py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow">
+                        ⏱️ सुरक्षा टाइमर शुरू करें
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instant Controls -->
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="startSirenSound('siren')" class="py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold rounded-xl text-xs shadow">
+                    🚨 पुलिस सायरन
+                </button>
+                <button onclick="startSirenSound('whistle')" class="py-2.5 bg-amber-600 hover:bg-amber-500 text-white font-bold rounded-xl text-xs shadow">
+                    📢 तेज़ सीटी
+                </button>
+            </div>
+            <button onclick="toggleScreenStrobe()" class="w-full py-2 bg-slate-800 text-yellow-300 border border-slate-700 font-bold rounded-xl text-xs">
+                ⚡ स्क्रीन स्ट्रोब फ्लैश (चालू/बंद)
+            </button>
+            <button onclick="stopAllAudio()" class="w-full py-2 bg-slate-800 text-red-400 border border-red-500/50 font-black rounded-xl text-xs">
+                ⏹️ ध्वनि और स्ट्रोब बंद करें
+            </button>
+            <button onclick="stopAllAudio(); closeModal('sirenModal');" class="w-full bg-slate-800 text-slate-400 font-bold py-1.5 rounded-xl text-xs">
+                बंद करें
+            </button>
+        </div>
+    </div>
+
+    <!-- 4B. EMERGENCY AUDIO RECORDING & FAMILY DISPATCH MODAL -->
+    <div id="recordSosModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/90 backdrop-blur-md">
+        <div class="bg-slate-900 border-4 border-red-500 rounded-3xl p-4 max-w-sm w-full shadow-2xl relative space-y-3.5 text-white max-h-[92vh] overflow-y-auto">
+            <button onclick="closeModal('recordSosModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full z-10">✕</button>
+            <div class="text-center space-y-1">
+                <div class="w-14 h-14 bg-red-950/80 border-2 border-red-500 rounded-2xl flex items-center justify-center mx-auto text-2xl shadow-lg shadow-red-900/50">
+                    🎙️
+                </div>
+                <h3 class="text-lg font-black text-red-400">
+                    आपातकालीन ऑडियो रिकॉर्डिंग एवं परिवार अलर्ट
+                </h3>
+                <p class="text-[11px] text-slate-300">
+                    आस-पास की आवाजें साक्ष्य के रूप में रिकॉर्ड होंगी और आपकी लाइव लोकेशन व संदेश तुरंत परिवार को भेजा जाएगा।
+                </p>
+            </div>
+
+            <!-- Permission & Recording State -->
+            <div id="recInactiveState" class="bg-slate-800 border border-slate-700 rounded-2xl p-3 text-center space-y-2">
+                <div class="text-xs font-bold text-amber-300">
+                    🎙️ माइक्रोफ़ोन एवं जीपीएस अनुमति
+                </div>
+                <p class="text-[10px] text-slate-300">
+                    आपातकालीन साक्ष्य रिकॉर्ड करने और परिवार को लाइव लोकेशन भेजने के लिए माइक्रोफ़ोन और जीपीएस की अनुमति दें।
+                </p>
+                <button onclick="startAudioEvidenceRecording()" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-black py-2.5 rounded-xl text-xs shadow-lg active:scale-95">
+                    अनुमति दें और SOS रिकॉर्डिंग शुरू करें
+                </button>
+            </div>
+
+            <div id="recActiveState" class="hidden bg-gradient-to-b from-red-950/80 to-slate-950 border-2 border-red-500 rounded-2xl p-3 text-center space-y-2">
+                <div class="text-xs font-black text-red-400 animate-pulse">
+                    🔴 आपातकालीन ऑडियो साक्ष्य रिकॉर्ड हो रहा है...
+                </div>
+                <div id="recTimerDisplay" class="text-3xl font-black font-mono text-white tracking-widest">
+                    00:00
+                </div>
+                <button onclick="stopAudioEvidenceRecording()" class="w-full bg-red-600 text-white font-black py-2.5 rounded-xl text-xs shadow-lg active:scale-95">
+                    ⏹️ रिकॉर्डिंग रोकें और साक्ष्य सुरक्षित करें
+                </button>
+            </div>
+
+            <!-- Playback section if recorded -->
+            <div id="recPlaybackSection" class="hidden bg-slate-950 border border-emerald-500/50 rounded-2xl p-3 space-y-2">
+                <div class="flex items-center justify-between text-xs font-bold text-emerald-400">
+                    <span>🔊 रिकॉर्ड किया गया साक्ष्य</span>
+                    <span id="recDurationBadge" class="text-[10px] bg-emerald-950 px-2 py-0.5 rounded text-emerald-300">00:00</span>
+                </div>
+                <audio id="recAudioPlayer" controls class="w-full h-8 outline-none"></audio>
+                <button onclick="downloadRecordedAudioFile()" class="w-full bg-slate-800 text-emerald-300 border border-emerald-500/40 text-[10px] font-bold py-1.5 rounded-lg flex items-center justify-center gap-1">
+                    ⬇️ ऑडियो साक्ष्य डाउनलोड करें (.webm)
+                </button>
+            </div>
+
+            <!-- Instant Actions to Family -->
+            <div class="space-y-2">
+                <div class="text-[10px] font-bold text-slate-300 uppercase">परिवार को तुरंत भेजें:</div>
+                <button onclick="shareRecordSosWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl text-xs shadow-lg flex items-center justify-center gap-2">
+                    <span>💬 व्हाट्सएप (WhatsApp) द्वारा भेजें</span>
+                </button>
+                <button onclick="shareRecordSosSms()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black py-3 rounded-xl text-xs shadow-lg flex items-center justify-center gap-2">
+                    <span>✉️ सभी संपर्कों को SMS भेजें</span>
+                </button>
+            </div>
+
+            <button onclick="closeModal('recordSosModal'); openModal('safeModal');" class="w-full bg-emerald-950 text-emerald-300 border border-emerald-500/40 font-bold py-2 rounded-xl text-xs">
+                💚 मैं सुरक्षित हूँ (I AM SAFE)
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. HELPLINE DIRECTORY MODAL -->
+    <div id="helplineModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-red-600 rounded-3xl max-w-md w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-sm font-black text-white flex items-center gap-2">
+                    📞 राष्ट्रीय आपातकालीन नंबर (भारत)
+                </h3>
+                <button onclick="closeModal('helplineModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div class="p-2.5 bg-slate-900 border-b border-slate-800">
+                <input type="text" id="helplineSearch" onkeyup="filterHelplines()" placeholder="नंबर या सेवा खोजें..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
+            </div>
+            <div id="helplineList" class="p-3 overflow-y-auto space-y-2 flex-1">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. FIRST AID PROTOCOLS MODAL -->
+    <div id="firstAidModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-emerald-500 rounded-3xl max-w-md w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-sm font-black text-white flex items-center gap-2">
+                    🩹 ऑफ़लाइन प्राथमिक चिकित्सा गाइड
+                </h3>
+                <button onclick="closeModal('firstAidModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div id="firstAidContent" class="p-3 overflow-y-auto space-y-3 flex-1">
+                <!-- First aid cards dynamically rendered -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. MEDICAL ID MODAL -->
+    <div id="medicalModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-blue-500 rounded-3xl max-w-md w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-sm font-black text-white flex items-center gap-2">
+                    🪪 आपातकालीन मेडिकल आईडी
+                </h3>
+                <button onclick="closeModal('medicalModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div class="p-4 overflow-y-auto space-y-3 text-xs flex-1">
+                <div class="bg-red-950/60 border border-red-500/50 p-3 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <span class="text-[10px] text-red-300 font-bold uppercase">रक्त समूह (Blood Group)</span>
+                        <div id="displayBloodGroup" class="text-2xl font-black text-red-400 font-mono">B+</div>
+                    </div>
+                    <span class="text-3xl">🩸</span>
+                </div>
+                <div>
+                    <label class="font-bold text-slate-400 block mb-1">पूरा नाम:</label>
+                    <input type="text" id="medName" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="font-bold text-slate-400 block mb-1">रक्त समूह चुनें:</label>
+                        <select id="medBlood" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-1.5 text-white font-bold">
+                            <option>O+</option><option>O-</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-bold text-slate-400 block mb-1">उम्र (Age):</label>
+                        <input type="text" id="medAge" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="font-bold text-amber-400 block mb-1">एलर्जी (दवाएं / भोजन):</label>
+                    <input type="text" id="medAllergies" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-400 block mb-1">वर्तमान नियमित दवाएं:</label>
+                    <input type="text" id="medMeds" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-white">
+                </div>
+                <div>
+                    <label class="font-bold text-slate-400 block mb-1">आपातकालीन निर्देश / डॉक्टर संपर्क:</label>
+                    <textarea id="medNotes" rows="2" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-white"></textarea>
+                </div>
+            </div>
+            <div class="p-3 bg-slate-950 border-t border-slate-800 flex gap-2">
+                <button onclick="saveMedicalProfile()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2 rounded-xl text-xs">
+                    सुरक्षित करें (Save)
+                </button>
+                <button onclick="shareMedicalID()" class="bg-slate-800 text-blue-400 border border-blue-500/40 font-bold px-3 py-2 rounded-xl text-xs">
+                    शेयर करें
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. LOCATION MODAL -->
+    <!-- 8. LOCATION & OFFLINE MAP MODAL -->
+    <div id="locationModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/90 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-yellow-500 rounded-3xl p-4 max-w-sm w-full text-center shadow-2xl relative space-y-3 text-white max-h-[92vh] overflow-y-auto">
+            <button onclick="closeModal('locationModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white bg-slate-800 p-1.5 rounded-full z-10">✕</button>
+            <div class="flex items-center gap-2 text-left">
+                <div class="w-10 h-10 bg-yellow-500/20 border-2 border-yellow-500 rounded-2xl flex items-center justify-center text-xl shrink-0">
+                    🗺️
+                </div>
+                <div>
+                    <h3 class="text-sm font-black text-yellow-400">लाइव GPS एवं ऑफ़लाइन मैप</h3>
+                    <p class="text-[10px] text-slate-300">बिना इंटरनेट के भी लाइव स्थिति व दूरी रडार</p>
+                </div>
+            </div>
+
+            <!-- Interactive Offline Map Canvas -->
+            <div class="relative rounded-2xl overflow-hidden border border-slate-700 bg-slate-950">
+                <canvas id="standaloneOfflineMapCanvas" width="340" height="240" class="w-full h-56 block cursor-grab active:cursor-grabbing"></canvas>
+                
+                <!-- Overlay badges -->
+                <div class="absolute top-2 left-2 bg-slate-900/90 text-yellow-300 font-mono text-[9px] px-2 py-0.5 rounded-md border border-slate-700">
+                    <span id="canvasGpsPill">28.6139°N, 77.2090°E</span>
+                </div>
+
+                <!-- Canvas Control buttons -->
+                <div class="absolute right-2 bottom-2 flex flex-col gap-1">
+                    <button onclick="recenterStandaloneMap()" class="bg-slate-900/90 hover:bg-slate-800 text-yellow-400 border border-slate-700 p-1.5 rounded-lg text-xs shadow" title="Center GPS">🎯</button>
+                    <button onclick="zoomStandaloneMap(1)" class="bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 p-1.5 rounded-lg text-xs font-bold shadow">+</button>
+                    <button onclick="zoomStandaloneMap(-1)" class="bg-slate-900/90 hover:bg-slate-800 text-white border border-slate-700 p-1.5 rounded-lg text-xs font-bold shadow">-</button>
+                </div>
+            </div>
+
+            <!-- Offline Cache Control Bar -->
+            <div class="bg-slate-800/80 border border-slate-700 rounded-xl p-2.5 flex items-center justify-between text-left">
+                <div>
+                    <span class="text-[10px] font-bold text-white block">ऑफ़लाइन मैप टाइल स्थिति</span>
+                    <span id="standaloneCacheStatus" class="text-[9px] text-yellow-400 font-mono">25 टाइल्स सुरक्षित (~600 KB)</span>
+                </div>
+                <button id="standaloneCacheBtn" onclick="cacheCurrentAreaTilesStandalone()" class="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black text-[10px] px-2.5 py-1.5 rounded-lg shadow active:scale-95 transition-all">
+                    ⬇️ 2.5km मैप सेव करें
+                </button>
+            </div>
+
+            <div class="bg-slate-800 border border-slate-700 rounded-xl p-2.5 text-xs font-mono space-y-1 text-left">
+                <div class="flex justify-between">
+                    <span class="text-slate-400 font-sans">अक्षांश (Lat):</span>
+                    <span id="locLat" class="text-yellow-300 font-bold">28.613900° N</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400 font-sans">देशांतर (Lng):</span>
+                    <span id="locLng" class="text-yellow-300 font-bold">77.209000° E</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400 font-sans">सटीकता (Accuracy):</span>
+                    <span id="locAcc" class="text-emerald-400">±10 meters</span>
+                </div>
+            </div>
+
+            <div class="space-y-1.5">
+                <button onclick="copyLocationCoords()" class="w-full bg-yellow-500 text-slate-950 font-black py-2 rounded-xl text-xs shadow active:scale-95">
+                    📋 निर्देशांक कॉपी करें
+                </button>
+                <div class="grid grid-cols-2 gap-1.5">
+                    <a id="openMapsLink" href="https://maps.google.com" target="_blank" class="bg-slate-800 text-blue-400 border border-blue-500/40 font-bold py-2 rounded-xl text-[11px] flex items-center justify-center gap-1">
+                        🗺️ गूगल मैप
+                    </a>
+                    <button onclick="refreshGPS()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-[11px] border border-slate-700">
+                        🔄 GPS रिफ्रेश
+                    </button>
+                </div>
+            </div>
+            <button onclick="closeModal('locationModal')" class="w-full bg-slate-800 text-slate-400 font-bold py-1.5 rounded-xl text-xs">
+                बंद करें
+            </button>
+        </div>
+    </div>
+
+    <!-- 9. HISTORY MODAL -->
+    <div id="historyModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl max-w-md w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-sm font-black text-white flex items-center gap-2">
+                    🕒 आपातकालीन गतिविधि इतिहास
+                </h3>
+                <button onclick="closeModal('historyModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div id="historyList" class="p-3 overflow-y-auto space-y-2 flex-1 text-xs">
+                <!-- Dynamically loaded -->
+            </div>
+            <div class="p-3 bg-slate-950 border-t border-slate-800 flex justify-end">
+                <button onclick="clearHistoryLog()" class="text-red-400 text-xs font-bold hover:underline">
+                    इतिहास साफ़ करें (Clear)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. ADD CONTACT MODAL -->
+    <div id="addContactModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-5 max-w-sm w-full shadow-2xl relative space-y-3 text-white text-xs">
+            <h3 class="text-sm font-black text-amber-400">नया पारिवारिक संपर्क जोड़ें</h3>
+            <div>
+                <label class="font-bold text-slate-300 block mb-1">नाम (Name):</label>
+                <input type="text" id="contactName" placeholder="उदा. पापा / भाई..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white">
+            </div>
+            <div>
+                <label class="font-bold text-slate-300 block mb-1">मोबाइल नंबर (फोन):</label>
+                <input type="tel" id="contactPhone" placeholder="+91 98765 43210" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white font-mono">
+            </div>
+            <div>
+                <label class="font-bold text-slate-300 block mb-1">संबंध (Relationship):</label>
+                <select id="contactRelation" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-2.5 py-2 text-white">
+                    <option>Parent</option><option>Spouse</option><option>Sibling</option><option>Child</option><option>Doctor</option><option>Friend</option>
+                </select>
+            </div>
+            <div class="flex gap-2 pt-2">
+                <button onclick="saveNewContact()" class="flex-1 bg-amber-600 hover:bg-amber-500 text-white font-bold py-2.5 rounded-xl shadow">
+                    सहेजें (Save)
+                </button>
+                <button onclick="closeModal('addContactModal')" class="bg-slate-800 text-slate-300 font-bold px-3 py-2.5 rounded-xl">
+                    रद्द करें
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 11. AI FIRST-AID ASSISTANT MODAL -->
+    <div id="aiModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-2 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-purple-500 rounded-3xl max-w-md w-full h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-purple-600/30 flex items-center justify-center text-purple-400">🤖</div>
+                    <div>
+                        <h3 class="text-xs font-black text-white">एआई प्राथमिक चिकित्सा सहायक</h3>
+                        <span class="text-[9px] text-purple-400">24/7 आपातकालीन मार्गदर्शन</span>
+                    </div>
+                </div>
+                <button onclick="closeModal('aiModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div id="aiChatBox" class="p-3 overflow-y-auto space-y-2.5 flex-1 text-xs">
+                <div class="bg-slate-800 p-2.5 rounded-2xl border border-slate-700 leading-relaxed text-slate-200">
+                    नमस्ते! किसी भी आपात स्थिति (सीपीआर, रक्तस्राव, जलना, सांप का काटना, घुटन) के लिए तत्काल कदम पूछें।<br><strong class="text-red-400">⚠️ जीवन-संकट में तुरंत 112 डायल करें।</strong>
+                </div>
+            </div>
+            <div class="p-2 bg-slate-950 border-t border-slate-800 flex gap-1.5">
+                <input type="text" id="aiInput" onkeydown="if(event.key==='Enter') sendAiQuery()" placeholder="लक्षण या स्थिति लिखें (उदा. सीपीआर, कुत्ता काटना)..." class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white">
+                <button onclick="sendAiQuery()" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow">भेजें</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. INFO & APK GUIDE MODAL -->
+    <div id="infoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 bg-black/85 backdrop-blur-md">
+        <div class="bg-slate-900 border-2 border-blue-500 rounded-3xl max-w-md w-full max-h-[88vh] flex flex-col shadow-2xl overflow-hidden text-white">
+            <div class="p-3.5 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="text-sm font-black text-white flex items-center gap-2">
+                    📱 APK गाइड और ऐप जानकारी
+                </h3>
+                <button onclick="closeModal('infoModal')" class="p-1.5 bg-slate-800 rounded-xl text-slate-400 text-xs">✕</button>
+            </div>
+            <div class="p-4 overflow-y-auto space-y-3.5 text-xs text-slate-300 leading-relaxed flex-1">
+                <div class="bg-gradient-to-r from-red-950/60 to-slate-900 border border-red-500/50 p-3 rounded-2xl">
+                    <h4 class="font-bold text-red-400 text-sm mb-1">📦 APK में बदलने का सरल तरीका:</h4>
+                    <p class="text-[11px] text-slate-300 mb-2">
+                        इस HTML फाइल को मोबाइल में सीधे डाउनलोड करके आप 1 मिनट में APK बना सकते हैं:
+                    </p>
+                    <ol class="list-decimal list-inside space-y-1 text-[11px] text-slate-200">
+                        <li>नीचे दिए गए <strong>"Download Standalone index.html"</strong> बटन पर टैप करें।</li>
+                        <li><strong>Website 2 APK Builder</strong> (PC) या <strong>Web2Apk</strong> (Mobile) ऐप खोलें।</li>
+                        <li>"Local HTML Directory" में यह फाइल चुनें और "Generate APK" पर क्लिक करें।</li>
+                        <li>या Chrome ब्राउज़र में खोलकर <strong>"Add to Home Screen"</strong> करें — यह असली ऐप जैसा काम करेगा।</li>
+                    </ol>
+                </div>
+
+                <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-1">
+                    <h4 class="font-bold text-amber-400">🚨 112 एकीकृत राष्ट्रीय हेल्पलाइन</h4>
+                    <p class="text-[11px]">पुलिस (100), एम्बुलेंस (108) और दमकल (101) तीनों को 112 से सीधे कनेक्ट किया जाता है।</p>
+                </div>
+
+                <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 space-y-1">
+                    <h4 class="font-bold text-emerald-400">🔒 100% ऑफ़लाइन डेटा गोपनीयता</h4>
+                    <p class="text-[11px]">आपकी मेडिकल आईडी और परिवार के संपर्क आपके फोन में ही सुरक्षित रहते हैं।</p>
+                </div>
+            </div>
+            <div class="p-3 bg-slate-950 border-t border-slate-800 flex gap-2">
+                <button onclick="downloadSelfHtml()" class="flex-1 bg-gradient-to-r from-red-600 to-amber-600 hover:from-red-500 text-white font-black py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow">
+                    📥 Download APK index.html
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT ENGINE (100% Self-Contained) -->
+    <script>
+        // --- 1. STATE & STORAGE ---
+        let currentLang = 'hi';
+        let currentGPS = { lat: 28.6139, lng: 77.2090, acc: 25 };
+        let audioCtx = null;
+        let sirenOsc = null;
+        let sirenTimer = null;
+        let isStrobe = false;
+
+        const HELPLINES_DATA = [
+            { num: '112', titleEn: 'National Emergency SOS', titleHi: 'राष्ट्रीय आपातकालीन SOS (112)', descHi: 'पुलिस, एम्बुलेंस, दमकल व आपदा एकीकृत सेवा', cat: 'national' },
+            { num: '100', titleEn: 'Police Emergency', titleHi: 'पुलिस सहायता (100)', descHi: 'अपराध, चोरी या खतरे पर स्थानीय पुलिस नियंत्रण कक्ष', cat: 'police' },
+            { num: '108', titleEn: 'Emergency Ambulance', titleHi: 'आपातकालीन एम्बुलेंस सेवा (108)', descHi: 'हार्ट अटैक, दुर्घटना या आघात में निःशुल्क एम्बुलेंस', cat: 'medical' },
+            { num: '101', titleEn: 'Fire Brigade', titleHi: 'दमकल और अग्निशमन सेवा (101)', descHi: 'आग, गैस रिसाव या बचाव अभियान', cat: 'national' },
+            { num: '1930', titleEn: 'Cyber Crime Helpline', titleHi: 'राष्ट्रीय साइबर अपराध हेल्पलाइन (1930)', descHi: 'वित्तीय धोखाधड़ी, यूपीआई स्कैम पर फंड फ्रीज', cat: 'cyber' },
+            { num: '181', titleEn: 'CM Helpline', titleHi: 'सीएम हेल्पलाइन एवं नागरिक निवारण (181)', descHi: 'जनसुनवाई और नागरिक शिकायतों का समाधान', cat: 'cyber' },
+            { num: '1033', titleEn: 'Highway Emergency', titleHi: 'राष्ट्रीय राजमार्ग आपातकालीन (1033)', descHi: 'हाईवे पर सड़क दुर्घटना, टोइंग व क्रेन सहायता', cat: 'road' },
+            { num: '1091', titleEn: 'Women Helpline', titleHi: 'महिला सुरक्षा एवं संकट (1091)', descHi: 'महिलाओं की सुरक्षा व संकट में त्वरित पुलिस सहायता', cat: 'police' },
+            { num: '1098', titleEn: 'Childline India', titleHi: 'चाइल्डलाइन इंडिया (1098)', descHi: 'संकटग्रस्त बच्चों की सुरक्षा व बाल संरक्षण', cat: 'national' },
+            { num: '15100', titleEn: 'National Legal Aid', titleHi: 'मुफ्त कानूनी सहायता (NALSA 15100)', descHi: 'गरीब और जरूरतमंदों को निःशुल्क वकील', cat: 'national' },
+            { num: '1078', titleEn: 'Disaster Management', titleHi: 'आपदा प्रबंधन हेल्पलाइन (1078)', descHi: 'बाढ़, भूकंप या चक्रवात बचाव समन्वय', cat: 'road' },
+            { num: '1910', titleEn: 'Blood Bank Helpline', titleHi: 'राष्ट्रीय ब्लड बैंक हेल्पलाइन (1910)', descHi: 'दुर्लभ ब्लड ग्रुप व प्लेटलेट्स उपलब्धता', cat: 'medical' },
+            { num: '14416', titleEn: 'Mental Health Helpline', titleHi: 'टेली-मानस मानसिक स्वास्थ्य (14416)', descHi: 'मानसिक तनाव या अवसाद में 24 घंटे विशेषज्ञ परामर्श', cat: 'medical' }
+        ];
+
+        const FIRST_AID_DATA = [
+            {
+                title: 'कार्डियक अरेस्ट (CPR प्रक्रिया)',
+                summary: 'बेहोश और सांस न लेने पर छाती के केंद्र में 100-120 बार प्रति मिनट की गति से गहरा दबाएं।',
+                steps: ['112 पर तुरंत कॉल करें।', 'मरीज को फर्श पर सीधा लिटाएं।', 'छाती के बीच में दोनों हथेलियां रखकर 2 इंच गहरा दबाएं।', 'बिना रुके जब तक एम्बुलेंस न आ जाए जारी रखें।'],
+                donts: ['नरम गद्दे पर सीपीआर न दें।', '10 सेकंड से अधिक दबाव बंद न करें।']
+            },
+            {
+                title: 'गले में कुछ अटकना (हेमलिच पैंतरा)',
+                summary: 'व्यक्ति बोल या सांस न ले पाए तो पीछे से पेट पर तेज ऊपर की तरफ झटका दें।',
+                steps: ['पीड़ित के पीछे खड़े होकर कमर पकड़ें।', 'एक मुट्ठी नाभि के ऊपर रखें।', 'दूसरे हाथ से पकड़कर अंदर और ऊपर जोर से झटका दें।'],
+                donts: ['सीधे खड़े व्यक्ति को पानी न पिलाएं।']
+            },
+            {
+                title: 'गंभीर रक्तस्राव (खून बहना)',
+                summary: 'साफ कपड़े से घाव पर 10-15 मिनट लगातार सीधा दबाव बनाकर रखें।',
+                steps: ['घाव पर सीधा कपड़ा रखकर पूरी ताकत से दबाएं।', 'कपड़ा भीग जाए तो ऊपर और कपड़ा लगाएं, पुराना न हटाएं।'],
+                donts: ['घाव में घुसी वस्तु बाहर न खींचें।', 'मिट्टी या पाउडर न लगाएं।']
+            },
+            {
+                title: 'जलने और झुलसने पर',
+                summary: 'जले हुए स्थान पर तुरंत 20 मिनट तक नल का बहता सामान्य पानी डालें।',
+                steps: ['20 मिनट लगातार नल के पानी से ठंडा करें।', 'ढीली साफ पट्टी या प्लास्टिक फिल्म से ढकें।'],
+                donts: ['बर्फ कभी न लगाएं।', 'टूथपेस्ट, तेल या मक्खन न लगाएं।', 'छाले कभी न फोड़ें।']
+            },
+            {
+                title: 'सांप या जानवर का काटना',
+                summary: 'काटे गए अंग को स्थिर रखें और तुरंत एंटी-वेनम वाले अस्पताल ले जाएं।',
+                steps: ['मरीज को शांत लिटाएं, अंग को दिल से नीचे रखें।', 'तुरंत 112/108 डायल करें।'],
+                donts: ['मुंह से जहर न चूसें।', 'चीरा न लगाएं।', 'रस्सी या तार से कसकर न बांधें।']
+            }
+        ];
+
+        // Default Contacts
+        function getContacts() {
+            try {
+                const c = localStorage.getItem('eh_contacts');
+                return c ? JSON.parse(c) : [
+                    { name: 'पापा / Father', phone: '+919876543210', rel: 'Parent', primary: true },
+                    { name: 'मम्मी / Mother', phone: '+919876543211', rel: 'Parent' },
+                    { name: 'फैमिली डॉक्टर', phone: '+919876543212', rel: 'Doctor' }
+                ];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveContacts(arr) {
+            localStorage.setItem('eh_contacts', JSON.stringify(arr));
+            renderContacts();
+        }
+
+        function renderContacts() {
+            const list = getContacts();
+            const container = document.getElementById('contactsListContainer');
+            if (!container) return;
+
+            if (list.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-slate-500 text-xs">कोई संपर्क नहीं है। नया जोड़ें।</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map((c, i) => `
+                <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <span class="font-bold text-white text-xs">${c.name}</span>
+                            <span class="bg-slate-700 text-slate-300 text-[9px] px-1.5 py-0.2 rounded">${c.rel}</span>
+                            ${c.primary ? '<span class="bg-amber-500 text-slate-950 font-black text-[9px] px-1.5 rounded">Primary</span>' : ''}
+                        </div>
+                        <div class="text-[11px] font-mono text-amber-300 mt-0.5">${c.phone}</div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <a href="tel:${c.phone}" class="p-2 bg-emerald-600 text-white rounded-xl text-xs font-bold shadow">📞</a>
+                        <a href="https://api.whatsapp.com/send?phone=${c.phone.replace(/[^0-9]/g, '')}" target="_blank" class="p-2 bg-green-700 text-white rounded-xl text-xs shadow">💬</a>
+                        <button onclick="deleteContact(${i})" class="p-2 bg-slate-700 text-red-400 rounded-xl text-xs">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveNewContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const phone = document.getElementById('contactPhone').value.trim();
+            const rel = document.getElementById('contactRelation').value;
+            if (!name || !phone) {
+                alert('कृपया नाम और मोबाइल नंबर दर्ज करें।');
+                return;
+            }
+            const list = getContacts();
+            list.push({ name, phone, rel, primary: list.length === 0 });
+            saveContacts(list);
+            closeModal('addContactModal');
+            document.getElementById('contactName').value = '';
+            document.getElementById('contactPhone').value = '';
+        }
+
+        function deleteContact(idx) {
+            const list = getContacts();
+            list.splice(idx, 1);
+            saveContacts(list);
+        }
+
+        // --- 2. GPS GEOLOCATION WITH 30s BACKGROUND RETRY ---
+        let gpsRetryInterval = null;
+        let gpsRetryCount = 0;
+        let isGpsFallback = true;
+
+        function initGPS() {
+            if (!navigator.geolocation) return;
+            if (gpsRetryInterval) {
+                clearInterval(gpsRetryInterval);
+                gpsRetryInterval = null;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    currentGPS.lat = pos.coords.latitude;
+                    currentGPS.lng = pos.coords.longitude;
+                    currentGPS.acc = Math.round(pos.coords.accuracy || 20);
+                    isGpsFallback = false;
+                    gpsRetryCount = 0;
+                    if (gpsRetryInterval) {
+                        clearInterval(gpsRetryInterval);
+                        gpsRetryInterval = null;
+                    }
+                    updateGPSDisplay();
+                },
+                (err) => {
+                    console.warn('GPS notice: initial acquisition failed:', err.message, '- initiating 30s retry task');
+                    isGpsFallback = true;
+                    updateGPSDisplay();
+
+                    if (!gpsRetryInterval) {
+                        gpsRetryInterval = setInterval(() => {
+                            gpsRetryCount++;
+                            navigator.geolocation.getCurrentPosition(
+                                (retryPos) => {
+                                    currentGPS.lat = retryPos.coords.latitude;
+                                    currentGPS.lng = retryPos.coords.longitude;
+                                    currentGPS.acc = Math.round(retryPos.coords.accuracy || 20);
+                                    isGpsFallback = false;
+                                    if (gpsRetryInterval) {
+                                        clearInterval(gpsRetryInterval);
+                                        gpsRetryInterval = null;
+                                    }
+                                    updateGPSDisplay();
+                                    if (typeof drawStandaloneMap === 'function') drawStandaloneMap();
+                                },
+                                (retryErr) => {
+                                    console.warn('[Standalone GPS] Retry failed, will retry in 30s');
+                                },
+                                { enableHighAccuracy: true, timeout: 10000 }
+                            );
+                        }, 30000);
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        function updateGPSDisplay() {
+            const latStr = currentGPS.lat.toFixed(5);
+            const lngStr = currentGPS.lng.toFixed(5);
+            const mainText = document.getElementById('gpsTextMain');
+            const latEl = document.getElementById('locLat');
+            const lngEl = document.getElementById('locLng');
+            const accEl = document.getElementById('locAcc');
+            const mapLink = document.getElementById('openMapsLink');
+            const famGps = document.getElementById('familyGpsDisplay');
+
+            if (mainText) mainText.innerText = `${latStr}°N, ${lngStr}°E (सटीकता ±${currentGPS.acc}m)`;
+            if (latEl) latEl.innerText = `${latStr}° N`;
+            if (lngEl) lngEl.innerText = `${lngStr}° E`;
+            if (accEl) accEl.innerText = `±${currentGPS.acc} meters`;
+            if (mapLink) mapLink.href = `https://maps.google.com/?q=${latStr},${lngStr}`;
+            if (famGps) famGps.innerText = `📍 Live GPS: ${latStr}, ${lngStr} (±${currentGPS.acc}m)`;
+        }
+
+        function refreshGPS() {
+            initGPS();
+            alert('जीपीएस रिफ्रेश किया गया।');
+        }
+
+        function copyLocationCoords() {
+            const mapUrl = `https://maps.google.com/?q=${currentGPS.lat.toFixed(5)},${currentGPS.lng.toFixed(5)}`;
+            const text = `Lat: ${currentGPS.lat.toFixed(5)}, Lng: ${currentGPS.lng.toFixed(5)} (±${currentGPS.acc}m)\nगूगल मैप: ${mapUrl}`;
+            navigator.clipboard.writeText(text);
+            alert('स्थान निर्देशांक कॉपी हो गए!');
+        }
+
+        // --- 2B. OFFLINE MAP CANVAS & TILE CACHING ENGINE ---
+        let mapZoom = 15;
+        let mapCenterLat = 28.6139;
+        let mapCenterLng = 77.2090;
+        let mapTileCache = {};
+        const OFFLINE_TILE_CACHE_NAME = 'emergency_offline_standalone_tiles_v1';
+
+        function latLngToTile(lat, lng, z) {
+            const n = Math.pow(2, z);
+            const clampedLat = Math.max(-85, Math.min(85, lat));
+            const x = Math.floor(((lng + 180) / 360) * n);
+            const latRad = clampedLat * Math.PI / 180;
+            const y = Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n);
+            return { x: Math.max(0, Math.min(n - 1, x)), y: Math.max(0, Math.min(n - 1, y)) };
+        }
+
+        async function getTileImageStandalone(x, y, z) {
+            const key = `${z}_${x}_${y}`;
+            if (mapTileCache[key]) return mapTileCache[key];
+
+            const url = `https://tile.openstreetmap.org/${z}/${x}/${y}.png`;
+            if ('caches' in window) {
+                try {
+                    const cache = await caches.open(OFFLINE_TILE_CACHE_NAME);
+                    const match = await cache.match(url);
+                    if (match) {
+                        const blob = await match.blob();
+                        const img = new Image();
+                        img.src = URL.createObjectURL(blob);
+                        mapTileCache[key] = img;
+                        return img;
+                    }
+                } catch(e){}
+            }
+
+            if (navigator.onLine) {
+                try {
+                    const resp = await fetch(url, { mode: 'cors' });
+                    if (resp && resp.ok) {
+                        const blob = await resp.blob();
+                        if ('caches' in window) {
+                            try {
+                                const cache = await caches.open(OFFLINE_TILE_CACHE_NAME);
+                                cache.put(url, new Response(blob.slice()));
+                            } catch(e){}
+                        }
+                        const img = new Image();
+                        img.src = URL.createObjectURL(blob);
+                        mapTileCache[key] = img;
+                        return img;
+                    }
+                } catch(e){}
+            }
+            return null;
+        }
+
+        function drawStandaloneMap() {
+            const canvas = document.getElementById('standaloneOfflineMapCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Tactical dark navy background
+            ctx.fillStyle = '#090d16';
+            ctx.fillRect(0, 0, w, h);
+
+            // Topo Grid lines
+            ctx.strokeStyle = 'rgba(30, 41, 59, 0.7)';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 35) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 35) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            // Tile Rendering
+            const centerTile = latLngToTile(mapCenterLat, mapCenterLng, mapZoom);
+            for (let dx = -1; dx <= 1; dx++) {
+                for (let dy = -1; dy <= 1; dy++) {
+                    const tx = centerTile.x + dx;
+                    const ty = centerTile.y + dy;
+                    const posX = w / 2 + dx * 160 - 80;
+                    const posY = h / 2 + dy * 160 - 80;
+
+                    const cachedImg = mapTileCache[`${mapZoom}_${tx}_${ty}`];
+                    if (cachedImg && cachedImg.complete) {
+                        ctx.drawImage(cachedImg, posX, posY, 160, 160);
+                    } else {
+                        getTileImageStandalone(tx, ty, mapZoom).then(img => {
+                            if (img) img.onload = () => drawStandaloneMap();
+                        });
+                    }
+                }
+            }
+
+            // Radar concentric rings
+            const rings = [40, 80, 130];
+            const labels = ['100m', '500m', '1km'];
+            rings.forEach((r, idx) => {
+                ctx.beginPath();
+                ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(234, 179, 8, 0.35)';
+                ctx.setLineDash([4, 4]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                ctx.fillStyle = 'rgba(234, 179, 8, 0.8)';
+                ctx.font = 'bold 9px sans-serif';
+                ctx.fillText(labels[idx], w / 2 + 5, h / 2 - r + 10);
+            });
+
+            // Live User GPS marker
+            ctx.beginPath();
+            ctx.arc(w / 2, h / 2, 7, 0, Math.PI * 2);
+            ctx.fillStyle = '#ef4444';
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Emergency landmarks icons
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '12px sans-serif';
+            ctx.fillText('🏥', w / 2 + 50, h / 2 - 30);
+            ctx.fillText('🛡️', w / 2 - 55, h / 2 + 40);
+
+            // Update GPS pill
+            const pill = document.getElementById('canvasGpsPill');
+            if (pill) pill.innerText = `${mapCenterLat.toFixed(4)}°N, ${mapCenterLng.toFixed(4)}°E (Zoom ${mapZoom})`;
+        }
+
+        function recenterStandaloneMap() {
+            mapCenterLat = currentGPS.lat;
+            mapCenterLng = currentGPS.lng;
+            mapZoom = 15;
+            drawStandaloneMap();
+        }
+
+        function zoomStandaloneMap(delta) {
+            mapZoom = Math.max(12, Math.min(17, mapZoom + delta));
+            drawStandaloneMap();
+        }
+
+        async function cacheCurrentAreaTilesStandalone() {
+            const btn = document.getElementById('standaloneCacheBtn');
+            const status = document.getElementById('standaloneCacheStatus');
+            if (btn) btn.innerText = 'डाउनलोडिंग...';
+
+            const centerTile = latLngToTile(currentGPS.lat, currentGPS.lng, 15);
+            let downloaded = 0;
+
+            for (let dx = -2; dx <= 2; dx++) {
+                for (let dy = -2; dy <= 2; dy++) {
+                    await getTileImageStandalone(centerTile.x + dx, centerTile.y + dy, 15);
+                    downloaded++;
+                }
+            }
+
+            if (btn) btn.innerText = '✅ सुरक्षित हुआ!';
+            if (status) status.innerText = `${downloaded} टाइल्स सुरक्षित (ऑफ़लाइन उपलब्ध)`;
+            setTimeout(() => {
+                if (btn) btn.innerText = '⬇️ 2.5km मैप सेव करें';
+            }, 3000);
+            drawStandaloneMap();
+        }
+
+        // --- 3. MODAL CONTROLS ---
+        function openModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
+            if (id === 'nationalSosModal') startCountdown();
+            if (id === 'locationModal') {
+                recenterStandaloneMap();
+                setTimeout(drawStandaloneMap, 100);
+            }
+        }
+
+        function closeModal(id) {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
+        }
+
+        function openFamilySos() {
+            updateGPSDisplay();
+            openModal('familySosModal');
+        }
+
+        let countdownSec = 3;
+        let countdownTimer = null;
+        function startCountdown() {
+            countdownSec = 3;
+            const textEl = document.getElementById('countdownText');
+            if (textEl) textEl.innerText = '3s';
+            if (countdownTimer) clearInterval(countdownTimer);
+            countdownTimer = setInterval(() => {
+                countdownSec--;
+                if (textEl) textEl.innerText = countdownSec > 0 ? `${countdownSec}s` : 'Ready';
+                if (countdownSec <= 0) clearInterval(countdownTimer);
+            }, 1000);
+        }
+
+        // --- 4. SOS BROADCASTING (WhatsApp & SMS) ---
+        function buildDistressMessage() {
+            const mapUrl = `https://maps.google.com/?q=${currentGPS.lat.toFixed(5)},${currentGPS.lng.toFixed(5)}`;
+            return `🆘 आपातकालीन सहायता (EMERGENCY)! मैं गंभीर संकट में हूँ और मुझे आपकी तत्काल मदद चाहिए। मेरी लाइव लोकेशन: ${mapUrl} (सटीकता: ±${currentGPS.acc}m)। कृपया तुरंत मुझे कॉल करें या मदद भेजें!`;
+        }
+
+        function dispatchFamilyWhatsApp() {
+            const msg = buildDistressMessage();
+            logHistory('Family SOS via WhatsApp', 'WhatsApp');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function dispatchFamilySMS() {
+            const msg = buildDistressMessage();
+            const contacts = getContacts();
+            const phones = contacts.map(c => c.phone.replace(/[^0-9+]/g, '')).filter(Boolean);
+            const target = phones.join(';');
+            logHistory('Family SOS via SMS', 'SMS');
+            window.open(`sms:${target}?body=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function copyDistressMessage() {
+            const msg = buildDistressMessage();
+            navigator.clipboard.writeText(msg);
+            alert('संकट संदेश कॉपी हो गया!');
+        }
+
+        function sendEmergencySMS() {
+            dispatchFamilySMS();
+            closeModal('nationalSosModal');
+        }
+
+        function sendSafeNotification(channel) {
+            const note = document.getElementById('safeCustomNote').value.trim();
+            const mapUrl = `https://maps.google.com/?q=${currentGPS.lat.toFixed(5)},${currentGPS.lng.toFixed(5)}`;
+            const msg = `💚 मैं पूरी तरह सुरक्षित हूँ (I AM SAFE)! मैं आपको सूचित करना चाहता हूँ कि मैं अब खतरे से बाहर और सुरक्षित हूँ। ${note ? `\nनोट: ${note}` : ''}\nस्थान: ${mapUrl}`;
+            
+            logHistory('Safe Status Check-In', channel.toUpperCase());
+            if (channel === 'whatsapp') {
+                window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+            } else {
+                const contacts = getContacts();
+                const phones = contacts.map(c => c.phone.replace(/[^0-9+]/g, '')).filter(Boolean);
+                window.open(`sms:${phones.join(';')}?body=${encodeURIComponent(msg)}`, '_blank');
+            }
+            closeModal('safeModal');
+            alert('सुरक्षा संदेश भेजा गया!');
+        }
+
+        // --- 5. WEB AUDIO SYNTHESIZER (SIREN & WHISTLE) ---
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioClass = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioClass();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function startSirenSound(type) {
+            stopAllAudio();
+            initAudio();
+            if (!audioCtx) return;
+
+            if (type === 'siren') {
+                sirenOsc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                sirenOsc.type = 'sawtooth';
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+
+                let freq = 700;
+                let up = true;
+                sirenTimer = setInterval(() => {
+                    if (up) { freq += 120; if (freq >= 1350) up = false; }
+                    else { freq -= 120; if (freq <= 650) up = true; }
+                    try { sirenOsc.frequency.setTargetAtTime(freq, audioCtx.currentTime, 0.05); } catch(e){}
+                }, 70);
+
+                sirenOsc.connect(gain);
+                gain.connect(audioCtx.destination);
+                sirenOsc.start();
+                logHistory('Police Siren Sounded', 'Alarm');
+            } else {
+                sirenOsc = audioCtx.createOscillator();
+                const osc2 = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                sirenOsc.type = 'sine';
+                sirenOsc.frequency.setValueAtTime(2900, audioCtx.currentTime);
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(3000, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+
+                let on = true;
+                sirenTimer = setInterval(() => {
+                    on = !on;
+                    gain.gain.setTargetAtTime(on ? 0.35 : 0.0, audioCtx.currentTime, 0.04);
+                }, 280);
+
+                sirenOsc.connect(gain);
+                osc2.connect(gain);
+                gain.connect(audioCtx.destination);
+                sirenOsc.start();
+                osc2.start();
+                logHistory('Whistle Alarm Sounded', 'Alarm');
+            }
+        }
+
+        function stopAllAudio() {
+            if (sirenTimer) { clearInterval(sirenTimer); sirenTimer = null; }
+            if (sirenOsc) { try { sirenOsc.stop(); sirenOsc.disconnect(); } catch(e){} sirenOsc = null; }
+            if (isStrobe) toggleScreenStrobe();
+        }
+
+        function toggleScreenStrobe() {
+            isStrobe = !isStrobe;
+            if (isStrobe) document.body.classList.add('screen-strobe');
+            else document.body.classList.remove('screen-strobe');
+        }
+
+        function toggleSirenAudio() {
+            if (sirenOsc) stopAllAudio();
+            else startSirenSound('siren');
+        }
+
+        // --- SCHEDULED SAFETY SIREN (DEAD MAN'S SWITCH) ---
+        let scheduledTargetMs = null;
+        let scheduledInterval = null;
+        let chosenDurationSec = 180;
+
+        function setTimerDuration(sec, btnEl) {
+            chosenDurationSec = sec;
+            document.querySelectorAll('.timer-btn').forEach(b => {
+                b.className = 'timer-btn py-1.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700';
+            });
+            if (btnEl) {
+                btnEl.className = 'timer-btn py-1.5 rounded-lg bg-amber-500 text-slate-950 font-black border border-amber-400';
+            }
+        }
+
+        function playWarningBeep() {
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.12);
+            } catch(e){}
+        }
+
+        function startScheduledTimer() {
+            scheduledTargetMs = Date.now() + chosenDurationSec * 1000;
+            document.getElementById('standaloneTimerSetupBox').classList.add('hidden');
+            document.getElementById('standaloneActiveTimerBox').classList.remove('hidden');
+            document.getElementById('standaloneTimerBadge').classList.remove('hidden');
+
+            if (scheduledInterval) clearInterval(scheduledInterval);
+            scheduledInterval = setInterval(() => {
+                const remaining = Math.max(0, Math.round((scheduledTargetMs - Date.now()) / 1000));
+                const mins = Math.floor(remaining / 60).toString().padStart(2, '0');
+                const secs = (remaining % 60).toString().padStart(2, '0');
+                const countdownEl = document.getElementById('standaloneTimerCountdown');
+                if (countdownEl) countdownEl.innerText = `${mins}:${secs}`;
+
+                // Warning beeps in final 10 seconds
+                if (remaining <= 10 && remaining > 0) {
+                    playWarningBeep();
+                }
+
+                // Expired!
+                if (remaining === 0) {
+                    clearInterval(scheduledInterval);
+                    scheduledInterval = null;
+                    scheduledTargetMs = null;
+                    document.getElementById('standaloneActiveTimerBox').classList.add('hidden');
+                    document.getElementById('standaloneTimerSetupBox').classList.remove('hidden');
+                    document.getElementById('standaloneTimerBadge').classList.add('hidden');
+
+                    startSirenSound('siren');
+                    toggleScreenStrobe();
+                    logHistory('Scheduled Safety Siren Expired', 'Alarm');
+                    alert('🚨 सुरक्षा टाइमर समाप्त हो गया! मदद के लिए सायरन बजाया जा रहा है।');
+                    openFamilySos();
+                }
+            }, 1000);
+
+            logHistory('Safety Timer Started (' + chosenDurationSec + 's)', 'Timer');
+        }
+
+        function disarmScheduledTimer() {
+            if (scheduledInterval) {
+                clearInterval(scheduledInterval);
+                scheduledInterval = null;
+            }
+            scheduledTargetMs = null;
+            document.getElementById('standaloneActiveTimerBox').classList.add('hidden');
+            document.getElementById('standaloneTimerSetupBox').classList.remove('hidden');
+            document.getElementById('standaloneTimerBadge').classList.add('hidden');
+            logHistory('Safety Timer Disarmed Safely', 'Safety');
+            alert('✓ सुरक्षा टाइमर बंद कर दिया गया। आप सुरक्षित हैं।');
+        }
+
+        function extendScheduledTimer(sec) {
+            if (scheduledTargetMs) {
+                scheduledTargetMs += sec * 1000;
+            }
+        }
+
+        // --- 6. HELPLINES & FIRST AID RENDERING ---
+        function openHelplineCategory(cat) {
+            renderHelplines(cat);
+            openModal('helplineModal');
+        }
+
+        function renderHelplines(catFilter = 'all') {
+            const listEl = document.getElementById('helplineList');
+            if (!listEl) return;
+            const search = (document.getElementById('helplineSearch')?.value || '').toLowerCase();
+
+            const filtered = HELPLINES_DATA.filter(h => {
+                const matchCat = catFilter === 'all' || h.cat === catFilter || (catFilter === 'cyber' && h.num === '181');
+                const matchSearch = h.num.includes(search) || h.titleHi.toLowerCase().includes(search) || h.titleEn.toLowerCase().includes(search);
+                return matchCat && matchSearch;
+            });
+
+            listEl.innerHTML = filtered.map(h => `
+                <div class="bg-slate-800 border border-slate-700 p-2.5 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <div class="font-bold text-white text-xs">${h.titleHi}</div>
+                        <div class="text-[10px] text-slate-400">${h.descHi}</div>
+                        <span class="text-xs font-mono font-bold text-amber-400 bg-amber-950/60 px-1.5 py-0.5 rounded">${h.num}</span>
+                    </div>
+                    <a href="tel:${h.num}" onclick="logHistory('Called ' + '${h.num}', 'Call')" class="bg-emerald-600 text-white font-bold text-xs px-3 py-2 rounded-xl shadow">
+                        📞 कॉल
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function filterHelplines() {
+            renderHelplines('all');
+        }
+
+        function renderFirstAid() {
+            const c = document.getElementById('firstAidContent');
+            if (!c) return;
+            c.innerHTML = FIRST_AID_DATA.map(f => `
+                <div class="bg-slate-800 border border-slate-700 p-3 rounded-2xl space-y-2">
+                    <h4 class="font-bold text-emerald-400 text-xs">${f.title}</h4>
+                    <p class="text-[11px] text-slate-300 font-semibold bg-emerald-950/30 p-2 rounded-xl">${f.summary}</p>
+                    <div class="text-[11px] space-y-1">
+                        <strong class="text-slate-200">चरण (क्या करें):</strong>
+                        ${f.steps.map(s => `<div class="text-slate-300">✓ ${s}</div>`).join('')}
+                    </div>
+                    <div class="text-[11px] text-red-300 bg-red-950/30 p-2 rounded-xl space-y-0.5">
+                        <strong class="text-red-400">चेतावनी (क्या न करें):</strong>
+                        ${f.donts.map(d => `<div>⚠️ ${d}</div>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- 7. MEDICAL ID STORAGE ---
+        function loadMedicalProfile() {
+            try {
+                const raw = localStorage.getItem('eh_med');
+                if (raw) {
+                    const m = JSON.parse(raw);
+                    document.getElementById('medName').value = m.name || '';
+                    document.getElementById('medAge').value = m.age || '';
+                    document.getElementById('medBlood').value = m.blood || 'B+';
+                    document.getElementById('medAllergies').value = m.allergies || '';
+                    document.getElementById('medMeds').value = m.meds || '';
+                    document.getElementById('medNotes').value = m.notes || '';
+                    document.getElementById('displayBloodGroup').innerText = m.blood || 'B+';
+                }
+            } catch(e){}
+        }
+
+        function saveMedicalProfile() {
+            const data = {
+                name: document.getElementById('medName').value,
+                age: document.getElementById('medAge').value,
+                blood: document.getElementById('medBlood').value,
+                allergies: document.getElementById('medAllergies').value,
+                meds: document.getElementById('medMeds').value,
+                notes: document.getElementById('medNotes').value
+            };
+            localStorage.setItem('eh_med', JSON.stringify(data));
+            document.getElementById('displayBloodGroup').innerText = data.blood;
+            alert('मेडिकल आईडी सुरक्षित हो गई!');
+            closeModal('medicalModal');
+        }
+
+        function shareMedicalID() {
+            const raw = localStorage.getItem('eh_med');
+            const m = raw ? JSON.parse(raw) : {};
+            const text = `🚨 आपातकालीन मेडिकल आईडी:
+नाम: ${m.name || 'Not set'} (${m.age || ''} वर्ष)
+रक्त समूह: ${m.blood || 'B+'}
+एलर्जी: ${m.allergies || 'कोई नहीं'}
+दवाएं: ${m.meds || 'कोई नहीं'}
+निर्देश: ${m.notes || ''}`;
+            navigator.clipboard.writeText(text);
+            alert('मेडिकल विवरण क्लिपबोर्ड पर कॉपी हो गया!');
+        }
+
+        // --- 8. HISTORY AUDIT LOG ---
+        function getHistory() {
+            try {
+                const h = localStorage.getItem('eh_history');
+                return h ? JSON.parse(h) : [];
+            } catch(e){ return []; }
+        }
+
+        function logHistory(title, type) {
+            const list = getHistory();
+            list.unshift({
+                id: Date.now(),
+                title,
+                type,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+            localStorage.setItem('eh_history', JSON.stringify(list.slice(0, 30)));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const listEl = document.getElementById('historyList');
+            if (!listEl) return;
+            const list = getHistory();
+            if (list.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-6 text-slate-500">कोई गतिविधि दर्ज नहीं है।</div>`;
+                return;
+            }
+            listEl.innerHTML = list.map(item => `
+                <div class="bg-slate-800 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center">
+                    <div>
+                        <div class="font-bold text-white text-xs">${item.title}</div>
+                        <span class="text-[9px] uppercase font-bold text-amber-400 bg-amber-950 px-1.5 py-0.2 rounded">${item.type}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400">${item.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function clearHistoryLog() {
+            localStorage.removeItem('eh_history');
+            renderHistory();
+        }
+
+        // --- 9. AI FIRST-AID ASSISTANT (Online + Offline Rules) ---
+        function sendAiQuery() {
+            const input = document.getElementById('aiInput');
+            const q = input.value.trim();
+            if (!q) return;
+
+            const box = document.getElementById('aiChatBox');
+            box.innerHTML += `
+                <div class="flex justify-end">
+                    <div class="bg-purple-600 text-white p-2.5 rounded-2xl max-w-[85%] rounded-br-none">${q}</div>
+                </div>
+            `;
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
+
+            // Online fetch or fallback
+            fetch('/api/emergency-ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: q, language: currentLang })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const answer = data.text || 'कृपया आपातकालीन सेवाओं से परामर्श करें।';
+                box.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 text-slate-200 border border-slate-700 p-2.5 rounded-2xl max-w-[85%] rounded-bl-none leading-relaxed">${answer}</div>
+                    </div>
+                `;
+                box.scrollTop = box.scrollHeight;
+            })
+            .catch(() => {
+                // Offline fallback intelligent rules
+                let reply = 'आपात स्थिति में शांत रहें। यदि गंभीर खतरा है तो तुरंत 112 डायल करें। पीड़ित को सुरक्षित स्थान पर रखें और श्वसन मार्ग साफ रखें।';
+                if (q.includes('सीपीआर') || q.toLowerCase().includes('cpr')) {
+                    reply = 'सीपीआर: 112 डायल करें। छाती के बीच में दोनों हाथों से 100-120 बार प्रति मिनट की गति से 2 इंच गहरा दबाएं।';
+                } else if (q.includes('खून') || q.toLowerCase().includes('bleed')) {
+                    reply = 'रक्तस्राव: घाव पर साफ कपड़े से लगातार 10-15 मिनट सीधा दबाव बनाए रखें। चोटिल अंग को ऊंचा रखें।';
+                }
+                box.innerHTML += `
+                    <div class="flex justify-start">
+                        <div class="bg-slate-800 text-slate-200 border border-slate-700 p-2.5 rounded-2xl max-w-[85%] rounded-bl-none leading-relaxed">${reply}</div>
+                    </div>
+                `;
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        // --- 9B. EMERGENCY AUDIO EVIDENCE RECORDING ---
+        let standaloneMediaRecorder = null;
+        let standaloneAudioChunks = [];
+        let standaloneRecInterval = null;
+        let standaloneRecSeconds = 0;
+        let standaloneAudioBlob = null;
+        let standaloneAudioUrl = null;
+
+        async function startAudioEvidenceRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                standaloneAudioChunks = [];
+                standaloneMediaRecorder = new MediaRecorder(stream);
+                standaloneMediaRecorder.ondataavailable = (e) => {
+                    if (e.data && e.data.size > 0) standaloneAudioChunks.push(e.data);
+                };
+                standaloneMediaRecorder.onstop = () => {
+                    standaloneAudioBlob = new Blob(standaloneAudioChunks, { type: 'audio/webm' });
+                    standaloneAudioUrl = URL.createObjectURL(standaloneAudioBlob);
+                    const player = document.getElementById('recAudioPlayer');
+                    if (player) player.src = standaloneAudioUrl;
+                    const badge = document.getElementById('recDurationBadge');
+                    if (badge) {
+                        const m = Math.floor(standaloneRecSeconds / 60);
+                        const s = standaloneRecSeconds % 60;
+                        badge.innerText = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+                    }
+                    document.getElementById('recPlaybackSection').classList.remove('hidden');
+                    stream.getTracks().forEach(t => t.stop());
+                };
+
+                standaloneMediaRecorder.start(500);
+                standaloneRecSeconds = 0;
+                document.getElementById('recInactiveState').classList.add('hidden');
+                document.getElementById('recActiveState').classList.remove('hidden');
+
+                if (standaloneRecInterval) clearInterval(standaloneRecInterval);
+                standaloneRecInterval = setInterval(() => {
+                    standaloneRecSeconds++;
+                    const m = Math.floor(standaloneRecSeconds / 60);
+                    const s = standaloneRecSeconds % 60;
+                    const disp = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+                    const el = document.getElementById('recTimerDisplay');
+                    if (el) el.innerText = disp;
+                }, 1000);
+
+                logHistory('emergency_record', 'आपातकालीन ऑडियो रिकॉर्डिंग चालू', 'माइक्रोफ़ोन से ऑडियो साक्ष्य रिकॉर्ड किया जा रहा है।');
+            } catch (err) {
+                alert('माइक्रोफ़ोन की अनुमति नहीं मिली। कृपया ब्राउज़र सेटिंग्स में माइक्रोफ़ोन की अनुमति दें।');
+            }
+        }
+
+        function stopAudioEvidenceRecording() {
+            if (standaloneMediaRecorder && standaloneMediaRecorder.state !== 'inactive') {
+                standaloneMediaRecorder.stop();
+            }
+            if (standaloneRecInterval) {
+                clearInterval(standaloneRecInterval);
+                standaloneRecInterval = null;
+            }
+            document.getElementById('recActiveState').classList.add('hidden');
+            document.getElementById('recInactiveState').classList.remove('hidden');
+            logHistory('emergency_record', 'ऑडियो साक्ष्य सुरक्षित किया गया', `अवधि: ${standaloneRecSeconds} सेकंड।`);
+        }
+
+        function downloadRecordedAudioFile() {
+            if (!standaloneAudioUrl) return;
+            const a = document.createElement('a');
+            a.href = standaloneAudioUrl;
+            a.download = `emergency-evidence-${Date.now()}.webm`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function getRecordSosMessage() {
+            const mapLink = userLat ? `https://maps.google.com/?q=${userLat},${userLng}` : 'GPS प्राप्त नहीं हुआ';
+            return `🆘 आपातकालीन सहायता की तत्काल आवश्यकता है! मैं संकट में हूँ।\n📍 मेरी लाइव लोकेशन: ${mapLink} (सटीकता: ±${userAccuracy ? Math.round(userAccuracy) : '20'}m)\n🎙️ सुरक्षा हेतु लाइव ऑडियो साक्ष्य रिकॉर्डिंग चालू है!\n⏰ समय: ${new Date().toLocaleTimeString()}\nकृपया तुरंत कॉल करें या पुलिस/मदद भेजें!`;
+        }
+
+        function shareRecordSosWhatsApp() {
+            const msg = getRecordSosMessage();
+            logHistory('emergency_record', 'ऑडियो अलर्ट व्हाट्सएप द्वारा भेजा', 'परिवार को ऑडियो अलर्ट व GPS भेजा गया।');
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function shareRecordSosSms() {
+            const msg = getRecordSosMessage();
+            const contacts = getContacts();
+            const phones = contacts.map(c => c.phone.replace(/[^0-9+]/g, '')).filter(Boolean);
+            const target = phones.length > 0 ? phones.join(';') : '';
+            logHistory('emergency_record', 'ऑडियो अलर्ट SMS द्वारा भेजा', `${contacts.length} संपर्कों को SMS भेजा गया।`);
+            window.open(`sms:${target}?body=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // --- 10. DOWNLOAD STANDALONE INDEX.HTML FOR APK ---
+        function downloadSelfHtml() {
+            const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "index.html";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert("✓ index.html फाइल डाउनलोड हो गई है! अब आप इसे Website 2 APK Builder या Cordova/Capacitor में डालकर 1 मिनट में APK बना सकते हैं।");
+        }
+
+        // --- 11. BILINGUAL LANGUAGE TOGGLE ---
+        function toggleLanguage() {
+            currentLang = currentLang === 'hi' ? 'en' : 'hi';
+            const btn = document.getElementById('langBtnText');
+            if (btn) btn.innerText = currentLang === 'hi' ? 'English' : 'हिन्दी';
+            document.documentElement.lang = currentLang;
+
+            if (currentLang === 'en') {
+                document.getElementById('appTitle').innerText = 'Emergency Help';
+                document.getElementById('appSubtitle').innerText = 'Family Safety & Rapid Alert';
+                document.getElementById('nationalSosBtnText').innerText = 'NATIONAL SOS (112)';
+                document.getElementById('nationalSosBtnSub').innerText = 'Instant Police / Ambulance / Fire';
+                document.getElementById('familySosBtnText').innerText = 'Alert Family Emergency';
+                document.getElementById('familySosBtnSub').innerText = 'Share Live Location via SMS & WhatsApp';
+                document.getElementById('safeBtnText').innerText = '💚 I AM SAFE';
+                document.getElementById('contactsHeader').innerText = '👨‍👩‍👧‍👦 Family Emergency Contacts';
+            } else {
+                document.getElementById('appTitle').innerText = 'Emergency Help';
+                document.getElementById('appSubtitle').innerText = 'पारिवारिक सुरक्षा और त्वरित अलर्ट';
+                document.getElementById('nationalSosBtnText').innerText = 'राष्ट्रीय आपातकाल SOS (112)';
+                document.getElementById('nationalSosBtnSub').innerText = 'तत्काल पुलिस / एम्बुलेंस / दमकल सेवा';
+                document.getElementById('familySosBtnText').innerText = 'परिवार को आपातकालीन अलर्ट भेजें';
+                document.getElementById('familySosBtnSub').innerText = 'लाइव लोकेशन WhatsApp और SMS से भेजें';
+                document.getElementById('safeBtnText').innerText = 'मैं सुरक्षित हूँ (I AM SAFE)';
+                document.getElementById('contactsHeader').innerText = '👨‍👩‍👧‍👦 पारिवारिक आपातकालीन संपर्क';
+            }
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            initGPS();
+            renderContacts();
+            renderFirstAid();
+            renderHistory();
+            loadMedicalProfile();
+        });
+    </script>
+</body>
+</html>
